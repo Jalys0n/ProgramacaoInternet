@@ -1,17 +1,60 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './formulario.css';
 
+interface Usuario {
+  id: number;
+  name: string;
+  email: string;
+}
 
-const formulario = () => {
+const Formulario: React.FC = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
   });
 
-  const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
+  const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+
+  const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Formulário enviado:', formData);
+    try {
+      const response = await fetch('http://localhost:8080/demo/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams(formData),
+      });
+
+      if (response.ok) {
+        console.log('Usuário adicionado com sucesso!');
+        alert('Usuário adicionado com sucesso!'); 
+        fetchUsuarios();
+      } else {
+        console.error('Erro ao adicionar usuário');
+      }
+    } catch (error) {
+      console.error('Erro de rede', error);
+    }
   };
+
+  const fetchUsuarios = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/demo/all');
+      if (response.ok) {
+        const data = await response.json();
+        setUsuarios(data);
+      } else {
+        console.error('Erro ao obter usuários');
+      }
+    } catch (error) {
+      console.error('Erro de rede', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsuarios();
+  }, []);
 
   return (
     <div className="formulario-container">
@@ -36,8 +79,17 @@ const formulario = () => {
   
         <button type="submit">Enviar</button>
       </form>
+      <div className="tabela">
+        <h1>Usuários adicionados:</h1>
+        {usuarios.map((usuario) => (
+          <div key={usuario.id}>
+            <p>Nome: {usuario.name}</p>
+            <p>Email: {usuario.email}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
 
-export default formulario;
+export default Formulario;

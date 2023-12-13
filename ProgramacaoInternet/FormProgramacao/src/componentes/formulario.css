@@ -1,5 +1,5 @@
 .formulario-container {
-    display: flex;
+    display:block ;
     align-items: center;
     justify-content: center;
     height: 100vh;
@@ -9,9 +9,11 @@
     max-width: 400px;
     width: 100%;
     padding: 20px;
-    border: 1px solid #ccc;
+    border: 1px solid black;
     border-radius: 5px;
-    box-sizing: border-box; /* Adicione essa linha */
+    box-sizing: border-box; 
+    margin: 0 auto;
+    margin-bottom: 100px;
   }
   
   label {
@@ -38,3 +40,15 @@
   button:hover {
     background-color: #45a049;
   }
+
+  .tabela{
+    
+    border: solid 1px black;
+    max-width: 400px;
+    width: 100%;
+    margin: 0 auto;
+}
+h1{
+  text-align: center;
+  font-size: 1.8em;
+}
